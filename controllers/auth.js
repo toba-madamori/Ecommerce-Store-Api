@@ -3,15 +3,13 @@ const {StatusCodes} = require('http-status-codes')
 
 
 const registerUser = async(req,res)=>{
-    res.status(StatusCodes.CREATED).json({msg:'user registered successfully'})
+    const user = await User.create({...req.body})
+    const token = user.createToken()
+    res.status(StatusCodes.CREATED).json({ username:user.name, token})
 }
 
 const loginUser = async(req,res)=>{
     res.status(StatusCodes.OK).json({msg:'user logged in'})
 }
 
-const logoutUser = async(req,res)=>{
-    res.status(StatusCodes.OK).json({msg:'user logged out'})
-}
-
-module.exports = { registerUser, loginUser, logoutUser}
+module.exports = { registerUser, loginUser}
