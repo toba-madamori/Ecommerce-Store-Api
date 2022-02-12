@@ -8,6 +8,7 @@ const connectDB = require('./db/connect')
 const authRouter = require('./routes/auth')
 const prodRouter = require('./routes/products')
 const cartRouter = require('./routes/cart')
+const {getAllProducts} = require('./controllers/product')
 
 
 //inbuilt middleware
@@ -20,6 +21,7 @@ const authenticateUser = require('./middleware/authentication')
 
 // routes
 app.use('/api/v1/auth', authRouter)
+app.get('/api/v1/products/get-all-products', getAllProducts) // allows for prospective customers to view all products without registering
 app.use('/api/v1/products',authenticateUser, prodRouter)
 app.use('/api/v1/cart',authenticateUser, cartRouter)
 

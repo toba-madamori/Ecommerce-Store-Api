@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const {
-    getAllProducts,
     getProduct,
     newProducts,
     reviews,
@@ -9,7 +8,7 @@ const {
     addProductsToFav,
 } = require('../controllers/product')
 
-router.get('/get-all-products', getAllProducts)
+//router.get('/get-all-products', getAllProducts)
 router.get('/new-products', newProducts)
 
 router.get('/read-prod-reviews/:id', reviews)
