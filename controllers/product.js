@@ -1,5 +1,6 @@
 const {StatusCodes} = require('http-status-codes')
 const Product = require('../models/product')
+const {BadRequestError, NotFoundError} = require('../errors')
 
 
 const getAllProducts = async(req,res)=>{
@@ -67,7 +68,10 @@ const getAllProducts = async(req,res)=>{
 }
 
 const getProduct = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg:'get a particular product' })
+    const {id:productID} = req.params
+
+    const product = await Product.findOne({_id:productID})
+    res.status(StatusCodes.OK).json({ product })
 }
 
 const newProducts = async(req,res)=>{

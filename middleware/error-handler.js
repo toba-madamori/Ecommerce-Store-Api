@@ -16,6 +16,10 @@ const errorHandlerMiddleware = (err,req,res,next)=>{
           .join(',')
         customError.statusCode = StatusCodes.BAD_REQUEST
     }
+    if (err.name === 'CastError') {
+        customError.msg = `No item found with id : ${err.value}`
+        customError.statusCode = StatusCodes.NOT_FOUND
+      }
     
     return res.status(customError.statusCode).json({ msg:customError.msg })
 }
