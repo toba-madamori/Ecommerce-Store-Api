@@ -75,7 +75,15 @@ const getProduct = async(req,res)=>{
 }
 
 const newProducts = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg: 'get all the products added this week' })
+    //past
+    let sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7));
+    let today = new Date()
+    //future
+    //let fiveDaysInTheFuture = new Date(new Date().setDate(new Date().getDate() + 5));
+
+    // getting the products added to the catalog in the last 7 days....
+    const products = await Product.find({ createdAt: { $lte:today, $gte:sevenDaysAgo } })
+    res.status(StatusCodes.OK).json({ products, nbHits: products.length })
 }
 
 const writeReview = async(req,res)=>{
