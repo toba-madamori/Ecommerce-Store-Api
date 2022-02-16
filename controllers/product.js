@@ -1,6 +1,8 @@
 const {StatusCodes} = require('http-status-codes')
 const Product = require('../models/product')
+const FavProducts = require('../models/favorite-products')
 const {BadRequestError, NotFoundError} = require('../errors')
+const res = require('express/lib/response')
 
 
 const getAllProducts = async(req,res)=>{
@@ -89,16 +91,41 @@ const newProducts = async(req,res)=>{
 const writeReview = async(req,res)=>{
     res.status(StatusCodes.OK).json({ msg: 'write a product review' })
 }
+const updateReview = async(req,res)=>{
+    res.status(StatusCodes.OK).json({ msg: 'update a product review' })
+}
+const deleteReview = async(req,res)=>{
+    res.status(StatusCodes.OK).json({ msg: 'delete a product review' })
+}
 
 const reviews = async(req,res)=>{
     res.status(StatusCodes.OK).json({ msg: 'read a product review' })
 }
 
+
 const addProductsToFav = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg: 'add product to favorites' })
+    req.body.user = req.user.userID
+    req.body.product = req.params.id
+
+    // checking if the product is already added to favorites
+    const alreadyAdded = await FavProducts.findOne({ user:req.user.userID, product:req.params.id})
+    if(alreadyAdded){
+        return res.status(StatusCodes.BAD_REQUEST).json({ msg:'This product has already been added to your favorites'})
+    }
+    // adding product to favorites
+    const newFavProd = await FavProducts.create(req.body)
+
+    res.status(StatusCodes.CREATED).json({ msg:'success', newFavProd })
 }
 
-// add a barebones search functionality making use of mongoDB's regex word search...
+const removeProductFromFav = async(req,res)=>{
+    res.status(StatusCodes.OK).json({ msg:'removed product from favorites' })
+}
+
+const favoriteProducts = async(req,res)=>{
+    res.status(StatusCodes.OK).json({ msg:'favorite products'})
+}
+
 
 module.exports={
     getAllProducts,
