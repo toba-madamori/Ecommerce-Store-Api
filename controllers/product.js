@@ -123,7 +123,12 @@ const removeProductFromFav = async(req,res)=>{
 }
 
 const favoriteProducts = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg:'favorite products'})
+    const user = req.user.userID
+    const favProducts = await FavProducts.find({user:user})
+    if(favProducts && favProducts.length>1 ){
+        return res.status(StatusCodes.OK).json({ favProducts, nbHits:favProducts.length })
+    }
+    res.status(StatusCodes.OK).json({ msg:'You currently dont have any favorite products' })
 }
 
 
@@ -134,4 +139,5 @@ module.exports={
     reviews,
     writeReview,
     addProductsToFav,
+    favoriteProducts,
 }
