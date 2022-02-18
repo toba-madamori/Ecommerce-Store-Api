@@ -119,7 +119,9 @@ const addProductsToFav = async(req,res)=>{
 }
 
 const removeProductFromFav = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg:'removed product from favorites' })
+    const productID = req.params.id
+    const product = await FavProducts.findOneAndDelete({ product:productID })
+    res.status(StatusCodes.NO_CONTENT).json({ msg:'success'})
 }
 
 const favoriteProducts = async(req,res)=>{
@@ -140,4 +142,5 @@ module.exports={
     writeReview,
     addProductsToFav,
     favoriteProducts,
+    removeProductFromFav,
 }
