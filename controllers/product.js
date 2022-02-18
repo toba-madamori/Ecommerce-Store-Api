@@ -1,8 +1,9 @@
 const {StatusCodes} = require('http-status-codes')
 const Product = require('../models/product')
 const FavProducts = require('../models/favorite-products')
+const ProductReview = require('../models/product-reviews')
 const {BadRequestError, NotFoundError} = require('../errors')
-const res = require('express/lib/response')
+
 
 
 const getAllProducts = async(req,res)=>{
@@ -89,7 +90,20 @@ const newProducts = async(req,res)=>{
 }
 
 const writeReview = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg: 'write a product review' })
+    const {user:{userID:user}, params:{id:product}, body:{text}} = req
+
+    // checking if a user has already written a review earlier
+    const alreadyreviewed = await ProductReview.findOne({ user, product})
+    if(alreadyreviewed){
+        return res.status(StatusCodes.OK).json({ msg:'you have already written a review, you can always update it'})
+    }
+    // checking if the body exists
+    if(text.length>1){
+        const review = await ProductReview.create({user, product, text})
+        return res.status(StatusCodes.CREATED).json({ review })
+    }
+    throw new BadRequestError('You cannot submit an empty review')
+
 }
 const updateReview = async(req,res)=>{
     res.status(StatusCodes.OK).json({ msg: 'update a product review' })
@@ -99,7 +113,14 @@ const deleteReview = async(req,res)=>{
 }
 
 const reviews = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg: 'read a product review' })
+    const productID = req.params.id
+
+    const reviews = await ProductReview.findOne({ product:productID })
+
+    if(!reviews){
+        return res.status(StatusCodes.OK).json({ msg:'There are no reviews yet, be the first to write a review...!!'})
+    }
+    res.status(StatusCodes.OK).json({ reviews })
 }
 
 
