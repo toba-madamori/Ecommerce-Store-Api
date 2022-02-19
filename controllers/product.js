@@ -106,10 +106,24 @@ const writeReview = async(req,res)=>{
 
 }
 const updateReview = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg: 'update a product review' })
+    const {body:{text}, user:{userID:user}, params:{id:product}} = req
+
+    // checking if the user has written a review or not
+    const newReview = await ProductReview.findOneAndUpdate({ user, product}, {text}, {new:true, runValidators:true})
+    if(!newReview){
+        throw new BadRequestError('You have not written a review yet...')
+    }
+    res.status(StatusCodes.OK).json({ newReview })
 }
 const deleteReview = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg: 'delete a product review' })
+    const { user:{userID:user}, params:{id:product}} = req
+    const review = await ProductReview.findOneAndDelete({ user, product })
+
+    if(!review){
+        throw new NotFoundError(`no review with userID: ${user}`)
+    }
+
+    res.status(StatusCodes.NO_CONTENT).json({ msg: 'success' })
 }
 
 const reviews = async(req,res)=>{
@@ -161,6 +175,8 @@ module.exports={
     newProducts,
     reviews,
     writeReview,
+    updateReview,
+    deleteReview,
     addProductsToFav,
     favoriteProducts,
     removeProductFromFav,

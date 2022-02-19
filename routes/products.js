@@ -5,6 +5,8 @@ const {
     newProducts,
     reviews,
     writeReview,
+    updateReview,
+    deleteReview,
     addProductsToFav,
     favoriteProducts,
     removeProductFromFav,
@@ -12,13 +14,16 @@ const {
 
 //router.get('/get-all-products', getAllProducts)
 router.get('/new-products', newProducts)
+router.get('/get-product/:id', getProduct)
 
 router.get('/read-prod-reviews/:id', reviews)
-router.get('/get-product/:id', getProduct)
 router.post('/write-prod-review/:id', writeReview)
+router.patch('/update-prod-review/:id', updateReview)
+router.delete('/delete-prod-review/:id', deleteReview)
+
+router.get('/get-favorite-products', favoriteProducts)
 router.post('/add-prod-favorites/:id', addProductsToFav)
 router.delete('/remove-product-favorites/:id', removeProductFromFav)
 
-router.get('/get-favorite-products', favoriteProducts)
 
 module.exports= router;
