@@ -1,5 +1,8 @@
 const {StatusCodes} = require('http-status-codes')
 
+const getCart = async(req,res)=>{
+    res.status(StatusCodes.OK).json({ msg: 'get the users cart' })
+}
 
 const addToCart = async(req,res)=>{
     res.status(StatusCodes.OK).json({ msg: 'add a product to the cart' })
@@ -14,6 +17,7 @@ const deleteCart = async(req,res)=>{
 }
 
 module.exports={
+    getCart,
     addToCart,
     removeFromCart,
     deleteCart,
