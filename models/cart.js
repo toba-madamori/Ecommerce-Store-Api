@@ -46,6 +46,17 @@ const CartSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
+CartSchema.pre('save', async function(){
+    this.total_no_of_products = this.product.length
+})
+CartSchema.pre('save', async function(){
+    this.cart_total = this.product.reduce((total, cartItem)=>{
+        const { product_quantity, product_price } = cartItem
+        total += product_quantity * product_price
+        return total
+    },0) 
+})
+
 
 module.exports= mongoose.model('Cart', CartSchema)
 
