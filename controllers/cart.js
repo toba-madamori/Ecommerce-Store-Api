@@ -6,7 +6,12 @@ const {BadRequestError, NotFoundError, UnauthenticatedError} = require('../error
 
 
 const getCart = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg: 'get the users cart' })
+    const { user:{ userID:user }} = req
+    const cart = await Cart.findOne({ user })
+    if(cart){
+        return res.status(StatusCodes.OK).json({ cart })
+    }
+    res.status(StatusCodes.OK).json({ msg:'You dont have a cart yet...', cart:{} })
 }
 
 const addToCart = async(req,res)=>{
