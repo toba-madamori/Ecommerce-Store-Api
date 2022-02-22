@@ -26,14 +26,12 @@ const addToCart = async(req,res)=>{
 
     // verifying the quantity of that particular product remaining
     const prodQuantity = await Product.findById({ _id:product }) 
+    const newQuantity = prodQuantity.verifyQuantity(product_quantity)
     let updatedProduct = {}
-    if(prodQuantity.quantity >= product_quantity){
-        const newQuantity = prodQuantity.quantity - product_quantity
-        if(newQuantity === 0){
-            updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity, in_stock:false}, { new:true, runValidators:true })
-        }else{
-             updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity }, { new:true, runValidators:true } )
-        }
+    if(newQuantity === 0){
+        updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity, in_stock:false}, { new:true, runValidators:true })
+    }else if(newQuantity > 0){
+        updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity }, { new:true, runValidators:true } )
     }else{
         throw new BadRequestError(`Sorry there are only ${prodQuantity.quantity} pieces of this ${product_name} left...`)
     }

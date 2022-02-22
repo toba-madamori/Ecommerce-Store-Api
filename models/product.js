@@ -42,4 +42,15 @@ const ProductSchema = new mongoose.Schema({
     },
 },{timestamps:true})
 
+ProductSchema.methods.verifyQuantity =  function(product_quantity){
+    let newQuantity = 0
+    if(this.quantity >= product_quantity){
+        newQuantity = this.quantity - product_quantity
+        return newQuantity
+    }else{
+        newQuantity = -1
+        return newQuantity
+    }
+}
+
 module.exports = mongoose.model('Products', ProductSchema);
