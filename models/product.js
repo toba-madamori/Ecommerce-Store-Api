@@ -45,7 +45,11 @@ const ProductSchema = new mongoose.Schema({
 ProductSchema.methods.verifyQuantity =  function(product_quantity){
     let newQuantity = 0
     if(this.quantity >= product_quantity){
-        newQuantity = this.quantity - product_quantity
+        if(product_quantity<0){
+            newQuantity = this.quantity + Math.abs(product_quantity)
+        }else{
+            newQuantity = this.quantity - product_quantity
+        }
         return newQuantity
     }else{
         newQuantity = -1

@@ -14,6 +14,9 @@ const getCart = async(req,res)=>{
     res.status(StatusCodes.OK).json({ msg:'You dont have a cart yet...', cart:{} })
 }
 
+
+
+
 const addToCart = async(req,res)=>{
     const { user:{ userID:user }, params:{ id:product } } = req
     const { product_name, product_quantity, product_price } = req.body
@@ -55,9 +58,30 @@ const addToCart = async(req,res)=>{
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg:'Not able to create cart, please try again later..' })
 }
 
+
+
 const updateCart = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg: 'update the no of a product in the cart' })
+    const { user:{ userID:user }, params:{ id:product } } = req
+    const { product_name, product_quantity } = req.body  // note that product_quantity values here should either be -negative or +positive
+
+    // verifying the quantity of that particular product remaining
+    const prodQuantity = await Product.findById({ _id:product }) 
+    
+    const newQuantity = prodQuantity.verifyQuantity(product_quantity)
+    let updatedProduct = {}
+    if(newQuantity === 0){
+        updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity, in_stock:false}, { new:true, runValidators:true })
+    }else if(newQuantity > 0){
+        updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity }, { new:true, runValidators:true } )
+    }else{
+        throw new BadRequestError(`Sorry there are only ${prodQuantity.quantity} pieces of this ${product_name} left...`)
+    }
+    let cart = await Cart.findOneAndUpdate({ user, 'product.productID':product},{ $inc:{'product.$.product_quantity':product_quantity}}, {new:true, runValidators:true})
+
+    res.status(StatusCodes.OK).json({ cart })
 }
+
+
 
 const removeFromCart = async(req,res)=>{
     res.status(StatusCodes.OK).json({ msg: 'remove a product from the cart' })
