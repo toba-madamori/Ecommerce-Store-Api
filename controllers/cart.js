@@ -16,7 +16,6 @@ const getCart = async(req,res)=>{
 
 
 
-
 const addToCart = async(req,res)=>{
     const { user:{ userID:user }, params:{ id:product } } = req
     const { product_name, product_quantity, product_price } = req.body
@@ -28,25 +27,19 @@ const addToCart = async(req,res)=>{
     }
 
     // verifying the quantity of that particular product remaining
-    const prodQuantity = await Product.findById({ _id:product }) 
-    const newQuantity = prodQuantity.verifyQuantity(product_quantity)
-    let updatedProduct = {}
-    if(newQuantity === 0){
-        updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity, in_stock:false}, { new:true, runValidators:true })
-    }else if(newQuantity > 0){
-        updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity }, { new:true, runValidators:true } )
-    }else{
-        throw new BadRequestError(`Sorry there are only ${prodQuantity.quantity} pieces of this ${product_name} left...`)
+    const prod = await Product.findById({ _id:product }) 
+    const newQuantity = prod.verifyQuantity(product_quantity)
+    
+    if(!newQuantity){
+        throw new BadRequestError(`Sorry there are only ${prod.quantity} pieces of this ${product_name} left...`)
     }
 
     // adding a new product to an already existing cart
     if(cart){
         const newProduct = {productID:product, product_name, product_quantity, product_price}
-        const total_no_of_products =  cart.total_no_of_products + 1
-        const addedCost = product_price * product_quantity
-        const cartTotal = cart.cart_total += addedCost
 
-        cart = await Cart.findOneAndUpdate({ user}, {total_no_of_products, cart_total:cartTotal, $push:{ product:newProduct }}, {new:true, runValidators:true})
+        cart = await Cart.findOneAndUpdate({ user}, {$push:{ product:newProduct }}, {new:true, runValidators:true})
+        await cart.save()
         return res.status(StatusCodes.OK).json({ cart })
     }
 
@@ -65,20 +58,19 @@ const updateCart = async(req,res)=>{
     const { product_name, product_quantity } = req.body  // note that product_quantity values here should either be -negative or +positive
 
     // verifying the quantity of that particular product remaining
-    const prodQuantity = await Product.findById({ _id:product }) 
-    
-    const newQuantity = prodQuantity.verifyQuantity(product_quantity)
-    let updatedProduct = {}
-    if(newQuantity === 0){
-        updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity, in_stock:false}, { new:true, runValidators:true })
-    }else if(newQuantity > 0){
-        updatedProduct = await Product.findByIdAndUpdate({ _id:product }, { quantity:newQuantity }, { new:true, runValidators:true } )
-    }else{
-        throw new BadRequestError(`Sorry there are only ${prodQuantity.quantity} pieces of this ${product_name} left...`)
-    }
-    let cart = await Cart.findOneAndUpdate({ user, 'product.productID':product},{ $inc:{'product.$.product_quantity':product_quantity}}, {new:true, runValidators:true})
+    const prod = await Product.findById({ _id:product }) 
+    const newQuantity = prod.verifyQuantity(product_quantity)
 
-    res.status(StatusCodes.OK).json({ cart })
+    if(!newQuantity){
+        throw new BadRequestError(`Sorry there are only ${prod.quantity} pieces of this ${product_name} left...`)
+    }
+
+    
+    // updating the cart
+    let cart = await Cart.findOneAndUpdate({ user, 'product.productID':product},{ $inc:{'product.$.product_quantity':product_quantity}}, {new:true, runValidators:true})
+    await cart.save()
+    
+    return res.status(StatusCodes.OK).json({ cart })    
 }
 
 

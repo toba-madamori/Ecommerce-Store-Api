@@ -27,6 +27,7 @@ const CartSchema = new mongoose.Schema({
                 type:Number,
                 required:[true, 'Please provide the product price'],
             },
+            _id:false,
         }
     ],
     cart_total:{
@@ -59,19 +60,6 @@ CartSchema.pre('save', async function(){
         return total
     },0) 
 })
-
-// CartSchema.post('findOneAndUpdate', async function(){
-//     console.log('got here 1');
-//     const docToUpdate = await this.model.findOne(this.getQuery())
-//     console.log(this.getQuery());
-//     this._update.total_no_of_products = docToUpdate.product.length
-
-//     let transactionTotal = 0
-//     for(let i = 0; i < docToUpdate.product.length; i++) {
-//         transactionTotal += docToUpdate.product[i].product_price * docToUpdate.product[i].product_quantity
-//     }
-//     this._update.cart_total = transactionTotal
-// })
 
 
 

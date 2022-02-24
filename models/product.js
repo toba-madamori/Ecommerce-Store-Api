@@ -50,11 +50,22 @@ ProductSchema.methods.verifyQuantity =  function(product_quantity){
         }else{
             newQuantity = this.quantity - product_quantity
         }
-        return newQuantity
+
+        //updating the product
+        if(newQuantity === 0){
+            this.quantity = newQuantity
+            this.in_stock = false
+            this.save()
+            return true
+        }else if(newQuantity>0){
+            this.quantity = newQuantity
+            this.save()
+            return true
+        }
     }else{
-        newQuantity = -1
-        return newQuantity
+        return false
     }
 }
+
 
 module.exports = mongoose.model('Products', ProductSchema);
