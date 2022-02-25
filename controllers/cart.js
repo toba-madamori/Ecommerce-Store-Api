@@ -15,7 +15,6 @@ const getCart = async(req,res)=>{
 }
 
 
-
 const addToCart = async(req,res)=>{
     const { user:{ userID:user }, params:{ id:product } } = req
     const { product_name, product_quantity, product_price } = req.body
@@ -52,7 +51,7 @@ const addToCart = async(req,res)=>{
 }
 
 
-
+// the frontend should make sure the user cannot reduce the amount of a particular product in the cart if its remaining only 1!!!!!!!!!!!!!!!
 const updateCart = async(req,res)=>{
     const { user:{ userID:user }, params:{ id:product } } = req
     const { product_name, product_quantity } = req.body  // note that product_quantity values here should either be -negative or +positive
@@ -65,7 +64,6 @@ const updateCart = async(req,res)=>{
         throw new BadRequestError(`Sorry there are only ${prod.quantity} pieces of this ${product_name} left...`)
     }
 
-    
     // updating the cart
     let cart = await Cart.findOneAndUpdate({ user, 'product.productID':product},{ $inc:{'product.$.product_quantity':product_quantity}}, {new:true, runValidators:true})
     await cart.save()
