@@ -115,7 +115,7 @@ const deleteCart = async(req,res)=>{
     }
 
     // updating the original products with the product_quantities of different products in the cart
-    for await(i of cart.product){
+    for (i of cart.product){
         const prod = await Product.findById({ _id: i.productID })
         const newQuantity = prod.verifyQuantity(-Math.abs(i.product_quantity))
 
@@ -123,7 +123,7 @@ const deleteCart = async(req,res)=>{
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg:'server error, please try again later...'})
         }
     }
-    cart.delete()
+    await cart.delete()
 
     res.status(StatusCodes.NO_CONTENT)
 }
