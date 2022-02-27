@@ -23,8 +23,6 @@ const addToCart = async(req,res)=>{
     let cart = await Cart.findOne({ user })
     if(cart && cart.product.find(item => item.product_name === product_name)){
         return res.status(StatusCodes.OK).json({ msg:'This product is already in your cart' })
-    }else if(!cart){
-        res.status(StatusCodes.OK).json({ msg:'You dont have a cart yet...', cart:{} })
     }
 
     // verifying the quantity of that particular product remaining
@@ -102,15 +100,32 @@ const removeFromCart = async(req,res)=>{
     // updating the cart
     cart = await Cart.findOneAndUpdate({ user }, { $pull:{ product:{productID:product} }}, { new:true, runValidators:true })
     await cart.save()
-    
-    // I can either delete the cart if there is only one product in the cart or just leave the empty cart to be 
-    // showing, not sure which to do
 
     res.status(StatusCodes.OK).json({ cart })
 }
 
 const deleteCart = async(req,res)=>{
-    res.status(StatusCodes.OK).json({ msg: 'delete cart' })
+    const { params:{ id:cartID } } = req
+
+    // checking if there is a cart
+    let cart = await Cart.findById({ _id:cartID })
+
+    if(!cart){
+        return res.status(StatusCodes.BAD_REQUEST).json({ msg:'Cannot delete a cart that doesnt exist...'})
+    }
+
+    // updating the original products with the product_quantities of different products in the cart
+    for await(i of cart.product){
+        const prod = await Product.findById({ _id: i.productID })
+        const newQuantity = prod.verifyQuantity(-Math.abs(i.product_quantity))
+
+        if(!newQuantity){
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg:'server error, please try again later...'})
+        }
+    }
+    cart.delete()
+
+    res.status(StatusCodes.NO_CONTENT)
 }
 
 module.exports={
