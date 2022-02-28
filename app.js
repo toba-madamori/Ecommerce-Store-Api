@@ -42,7 +42,7 @@ app.use(xss())
 
 // documentation route after deployment
 app.get('/',(req,res)=>{
-    res.send('<h2>E-commerce Api</h2><a href="/api-docs">Documentation</a>')
+    res.send('<h4>E-commerce Api: please note that the documentation provided with swagger-ui should be tested with postman or any other api client apart from swagger-ui itself!!, as only the auth routes will work on swagger-ui..</h4><a href="/api-docs">Documentation</a>')
   })
   app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocumentation))
 
