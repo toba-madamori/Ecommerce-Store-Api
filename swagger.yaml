@@ -1,0 +1,431 @@
+openapi: 3.0.0
+info:
+  title: Ecommerce-Store-Api
+  contact: {}
+  version: '1.0'
+servers:
+  - url: https://ecommerceapi001.herokuapp.com/api/v1
+    variables: {}
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register User
+      operationId: RegisterUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+            example:
+              name: tobi
+              email: tobi@gmail.com
+              password: secret
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login User
+      operationId: LoginUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequest'
+            example:
+              email: toba@gmail.com
+              password: secret
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /products/get-all-products:
+    get:
+      tags:
+        - Products
+      summary: Get All Products
+      operationId: GetAllProducts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /products/new-products:
+    get:
+      tags:
+        - Products
+      summary: Get New Products
+      operationId: GetNewProducts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /products/get-product/product-id:
+    get:
+      tags:
+        - Products
+      summary: Get A Product
+      operationId: GetAProduct
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /products/write-prod-review/product-id:
+    post:
+      tags:
+        - Reviews
+      summary: Write A Product Review
+      operationId: WriteAProductReview
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteAProductReviewRequest'
+            example:
+              text: 'The product is a blast, make sure you buy it... '
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /products/read-prod-reviews/product-id:
+    get:
+      tags:
+        - Reviews
+      summary: Read A Products Reviews
+      operationId: ReadAProductsReviews
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /products/update-prod-review/product-id:
+    patch:
+      tags:
+        - Reviews
+      summary: Update A Product Review
+      operationId: UpdateAProductReview
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAProductReviewRequest'
+            example:
+              text: updated product review, still make sure to buy it though...
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /products/delete-prod-review/product-id:
+    delete:
+      tags:
+        - Reviews
+      summary: Delete A Product Review
+      operationId: DeleteAProductReview
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /products/get-favorite-products:
+    get:
+      tags:
+        - Favorites
+      summary: Get All Favorite Products
+      operationId: GetAllFavoriteProducts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /products/add-prod-favorites/product-id:
+    post:
+      tags:
+        - Favorites
+      summary: Add A Product To Favorites
+      operationId: AddAProductToFavorites
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /products/remove-product-favorites/product-id:
+    delete:
+      tags:
+        - Favorites
+      summary: Remove A Product From Favorites
+      operationId: RemoveAProductFromFavorites
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /cart:
+    get:
+      tags:
+        - Cart
+      summary: Get A Cart
+      operationId: GetACart
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /cart/product-id:
+    post:
+      tags:
+        - Cart
+      summary: Add A Product  To Cart
+      operationId: AddAProductToCart
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddAProductToCartRequest'
+            example:
+              product_name: Pernod
+              product_quantity: 1
+              product_price: 119.64
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /cart//product-id:
+    patch:
+      tags:
+        - Cart
+      summary: Update The No Of A Particular Product In The Cart
+      operationId: UpdateTheNoOfAParticularProductInTheCart
+      parameters: []
+      requestBody:
+        description: 'note: the url should have only one slash'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTheNoOfAParticularProductInTheCartRequest'
+            example:
+              product_name: Pernod
+              product_quantity: 1
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /cart/remove-from-cart/product-id:
+    patch:
+      tags:
+        - Cart
+      summary: Remove A Particular Product From The Cart
+      operationId: RemoveAParticularProductFromTheCart
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveAParticularProductFromTheCartRequest'
+            example:
+              product_name: Pernod
+              product_quantity: 2
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /cart/cart-id:
+    delete:
+      tags:
+        - Cart
+      summary: Delete A Cart
+      operationId: DeleteACart
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+components:
+  schemas:
+    RegisterUserRequest:
+      title: RegisterUserRequest
+      required:
+        - name
+        - email
+        - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: tobi
+        email: tobi@gmail.com
+        password: secret
+    LoginUserRequest:
+      title: LoginUserRequest
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: toba@gmail.com
+        password: secret
+    WriteAProductReviewRequest:
+      title: WriteAProductReviewRequest
+      required:
+        - text
+      type: object
+      properties:
+        text:
+          type: string
+      example:
+        text: 'The product is a blast, make sure you buy it... '
+    UpdateAProductReviewRequest:
+      title: UpdateAProductReviewRequest
+      required:
+        - text
+      type: object
+      properties:
+        text:
+          type: string
+      example:
+        text: updated product review, still make sure to buy it though...
+    AddAProductToCartRequest:
+      title: AddAProductToCartRequest
+      required:
+        - product_name
+        - product_quantity
+        - product_price
+      type: object
+      properties:
+        product_name:
+          type: string
+        product_quantity:
+          type: integer
+          format: int32
+        product_price:
+          type: number
+      example:
+        product_name: Pernod
+        product_quantity: 1
+        product_price: 119.64
+    UpdateTheNoOfAParticularProductInTheCartRequest:
+      title: UpdateTheNoOfAParticularProductInTheCartRequest
+      required:
+        - product_name
+        - product_quantity
+      type: object
+      properties:
+        product_name:
+          type: string
+        product_quantity:
+          type: integer
+          format: int32
+      example:
+        product_name: Pernod
+        product_quantity: 1
+    RemoveAParticularProductFromTheCartRequest:
+      title: RemoveAParticularProductFromTheCartRequest
+      required:
+        - product_name
+        - product_quantity
+      type: object
+      properties:
+        product_name:
+          type: string
+        product_quantity:
+          type: integer
+          format: int32
+      example:
+        product_name: Pernod
+        product_quantity: 2
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+  - name: Auth
+    description: ''
+  - name: Products
+    description: ''
+  - name: Reviews
+    description: ''
+  - name: Favorites
+    description: ''
+  - name: Cart
+    description: ''
