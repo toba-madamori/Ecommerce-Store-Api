@@ -30,6 +30,6 @@
     "yamljs": "^0.3.0"
   },
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   }
 }
