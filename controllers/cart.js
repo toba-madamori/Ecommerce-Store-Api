@@ -105,7 +105,7 @@ const removeFromCart = async(req,res)=>{
 }
 
 const deleteCart = async(req,res)=>{
-    const { params:{ id:cartID } } = req
+    const { params:{ id:cartID }} = req
 
     // checking if there is a cart
     let cart = await Cart.findById({ _id:cartID })
@@ -123,9 +123,9 @@ const deleteCart = async(req,res)=>{
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg:'server error, please try again later...'})
         }
     }
-    await cart.delete()
+    cart.deleteOne()
 
-    res.status(StatusCodes.NO_CONTENT)
+    return res.status(StatusCodes.NO_CONTENT).json({})
 }
 
 module.exports={
