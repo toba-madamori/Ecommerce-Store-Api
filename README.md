@@ -1,4 +1,4 @@
-# ECOMMERCE WEB API 
+# ECOMMERCE STORE API 
 
 
 #### Motivation
