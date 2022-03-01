@@ -41,6 +41,8 @@ npm install && npm start
 2. Invoke in start()
 3. Setup .env in the root
 4. Add MONGO_URI with correct value
+5. Add JWT_SECRET value
+6. Add JWT_LIFETIME value
 
 #### Security
 
