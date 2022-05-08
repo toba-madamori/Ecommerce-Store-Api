@@ -8,7 +8,9 @@ const connectDB = require('./db/connect')
 const authRouter = require('./routes/auth')
 const prodRouter = require('./routes/products')
 const cartRouter = require('./routes/cart')
+const paymentRouter = require('./routes/checkout')
 const {getAllProducts} = require('./controllers/product')
+const { stripeSuccess, stripeCancel } = require('./controllers/payment')
 
 // extra security packages
 const helmet = require('helmet')
@@ -49,8 +51,11 @@ app.get('/',(req,res)=>{
 // routes
 app.use('/api/v1/auth', authRouter)
 app.get('/api/v1/products/get-all-products', getAllProducts) // allows for prospective customers to view all products without registering
+app.get('/api/v1/success/:cartID', stripeSuccess)
+app.get('/api/v1/cancel', stripeCancel )
 app.use('/api/v1/products',authenticateUser, prodRouter)
 app.use('/api/v1/cart',authenticateUser, cartRouter)
+app.use('/api/v1', authenticateUser,paymentRouter)
 
 
 app.use(errorHandlerMiddleware)
