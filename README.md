@@ -24,8 +24,9 @@ Method : Token Authentication
 
 
 #### Future Plans:
-This includes adding a very comprehensive suite of tests for the application 
+
 Real-time customer service app
+
 Cron job to automatically delete carts that have been inactive for a number of days
 
 
