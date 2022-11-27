@@ -4,7 +4,7 @@ info:
   contact: {}
   version: '1.0'
 servers:
-  - url: https://ecommerceapi001.herokuapp.com/api/v1
+  - url: https://ecommerce-api-1k07.onrender.com/api/v1
     variables: {}
 paths:
   /auth/register:
